@@ -1,0 +1,79 @@
+﻿<Window x:Class="TRP3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TRP3"
+        xmlns:vm="clr-namespace:TRP3.ViewModels"
+        mc:Ignorable="d"
+        Title="Морковные цепи" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="200"/>
+        </Grid.RowDefinitions>
+        <Image Grid.Column="0" Grid.Row="0" Source="/Views/Windows/graph.png" Margin="10"  Grid.RowSpan="2">
+
+        </Image>
+        <StackPanel Grid.Row="1" Grid.Column="1" >
+            <TextBlock Text="Матрица"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <TextBox Text="{Binding Matrix[0][0], StringFormat=\{0:F\}}" Grid.Row="0" Grid.Column="0" Height="20"/>
+                <TextBox Text="{Binding Matrix[0][1], StringFormat=\{0:F\}}" Grid.Row="0" Grid.Column="1" Height="20"/>
+                <TextBox Text="{Binding Matrix[0][2], StringFormat=\{0:F\}}" Grid.Row="0" Grid.Column="2" Height="20"/>
+                <TextBox Text="{Binding Matrix[0][3], StringFormat=\{0:F\}}" Grid.Row="0" Grid.Column="3" Height="20"/>
+                <TextBox Text="{Binding Matrix[1][0], StringFormat=\{0:F\}}" Grid.Row="1" Grid.Column="0" Height="20"/>
+                <TextBox Text="{Binding Matrix[1][1], StringFormat=\{0:F\}}" Grid.Row="1" Grid.Column="1" Height="20"/>
+                <TextBox Text="{Binding Matrix[1][2], StringFormat=\{0:F\}}" Grid.Row="1" Grid.Column="2" Height="20"/>
+                <TextBox Text="{Binding Matrix[1][3], StringFormat=\{0:F\}}" Grid.Row="1" Grid.Column="3" Height="20"/>
+                <TextBox Text="{Binding Matrix[2][0], StringFormat=\{0:F\}}" Grid.Row="2" Grid.Column="0" Height="20"/>
+                <TextBox Text="{Binding Matrix[2][1], StringFormat=\{0:F\}}" Grid.Row="2" Grid.Column="1" Height="20"/>
+                <TextBox Text="{Binding Matrix[2][2], StringFormat=\{0:F\}}" Grid.Row="2" Grid.Column="2" Height="20"/>
+                <TextBox Text="{Binding Matrix[2][3], StringFormat=\{0:F\}}" Grid.Row="2" Grid.Column="3" Height="20"/>
+                <TextBox Text="{Binding Matrix[3][0], StringFormat=\{0:F\}}" Grid.Row="3" Grid.Column="0" Height="20"/>
+                <TextBox Text="{Binding Matrix[3][1], StringFormat=\{0:F\}}" Grid.Row="3" Grid.Column="1" Height="20"/>
+                <TextBox Text="{Binding Matrix[3][2], StringFormat=\{0:F\}}" Grid.Row="3" Grid.Column="2" Height="20"/>
+                <TextBox Text="{Binding Matrix[3][3], StringFormat=\{0:F\}}" Grid.Row="3" Grid.Column="3" Height="20"/>
+                <TextBlock Text="P(0)" Grid.Row="4" Grid.Column="0"/>
+                <TextBox Text="{Binding T0[0], StringFormat=\{0:F\}}" Grid.Row="5" Grid.Column="0" Height="20"/>
+                <TextBox Text="{Binding T0[1], StringFormat=\{0:F\}}" Grid.Row="5" Grid.Column="1" Height="20"/>
+                <TextBox Text="{Binding T0[2], StringFormat=\{0:F\}}" Grid.Row="5" Grid.Column="2" Height="20"/>
+                <TextBox Text="{Binding T0[3], StringFormat=\{0:F\}}" Grid.Row="5" Grid.Column="3" Height="20"/>
+                <TextBlock Text="N" Grid.Row="6" Grid.Column="0"/>
+                <TextBox Text="{Binding N}" Grid.Row="6" Grid.Column="1"/>
+                <Button Content="START" Grid.Row="6" Grid.Column="3" Command="{Binding StartCommand}"/>
+                <TextBlock Text="P(N)" Grid.Row="7" Grid.Column="0"/>
+                <TextBox Text="{Binding TN[0], StringFormat=\{0:F\}}" Grid.Row="8" Grid.Column="0" Height="20"/>
+                <TextBox Text="{Binding TN[1], StringFormat=\{0:F\}}" Grid.Row="8" Grid.Column="1" Height="20"/>
+                <TextBox Text="{Binding TN[2], StringFormat=\{0:F\}}" Grid.Row="8" Grid.Column="2" Height="20"/>
+                <TextBox Text="{Binding TN[3], StringFormat=\{0:F\}}" Grid.Row="8" Grid.Column="3" Height="20"/>
+            </Grid>
+        </StackPanel>
+
+    </Grid>
+</Window>
