@@ -30,14 +30,14 @@ namespace TRP3.ViewModels
                     if (b < 0) return false;
                     check += b;
                 }
-                if (check != 1) return false;
+                if (check < 0.998 || check > 1.001) return false;
             }
             check = 0;
             foreach (var a in T0) {
                 if (a < 0) return false;
                 check += a;
             }
-            if (check != 1) return false;
+            if (check < 0.998 || check > 1.001) return false;
             return N > 1;
         }
 
