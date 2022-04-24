@@ -76,15 +76,19 @@ namespace TRP3.Models
             }
             return answer;
         }
-
+        /// <summary>
+        /// Запуск алгоритма расчета распределения
+        /// </summary>
+        /// <returns>Финальное рапределение</returns>
         public List<double> Start()
         {
             List<double> answer = new List<double>(4);
             for (int i = 0; i < 4; i++)
                 answer.Add(0);
-            for(int i=0;i<4;i++)
+            for (int i = 0; i < 4; i++)
             {
-                if (T0[i] > 0) {//если есть возможность входа с данной позиции, запускаем рекурсию
+                if (T0[i] > 0)
+                {//если есть возможность входа с данной позиции, запускаем рекурсию
                     var b = Split(i, N);
                     answer = ProbabilitySum(answer, b);
                 }
@@ -92,15 +96,31 @@ namespace TRP3.Models
 
             return answer;
         }
-
-        public List<double> Start(int n) {
+        /// <summary>
+        /// Запуск алгоритма распределения с изменением шагов(сохраняет изначальное значение шагов)
+        /// </summary>
+        /// <param name="n">новое кол-во шагов</param>
+        /// <returns>Финальное распределение на н-ом шагу</returns>
+        public List<double> Start(int n)
+        {
+            var n1 = N;
             N = n;
-            return Start();
+            var a = Start();
+            N = n1;
+            return a;
         }
-
-        public bool Compare(List<double> a, List<double> b) {//проверка точности
-            for (int i = 0; i < a.Count; i++) {
-                if (Math.Abs(a[i] - b[i]) > 0.01) return false;
+        /// <summary>
+        /// Проверка точности
+        /// </summary>
+        /// <param name="a">Распределение 1</param>
+        /// <param name="b">Распределение 2</param>
+        /// <param name="e">Нужная точность</param>
+        /// <returns>Проходит ли по заданной точности</returns>
+        public bool Compare(List<double> a, List<double> b, double e)
+        {//проверка точности
+            for (int i = 0; i < a.Count; i++)
+            {
+                if (Math.Abs(a[i] - b[i]) > e) return false;
             }
             return true;
         }

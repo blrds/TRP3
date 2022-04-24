@@ -54,14 +54,14 @@ namespace TRP3.ViewModels
         private void OnStartCommandExecuted(object p)
         {
             Graph g = new Graph(Matrix, T0, N);
-            if (!Model) {//моделируем, пока точность не равна 0.01
+            if (Model) {//моделируем, пока точность не равна 0.01
                 int i = 3;
                 PlotClearance();
                 List<double> Ta = g.Start(1), Tb=g.Start(2);
                 AddPoints(Ta, 1);
                 AddPoints(Tb, 2);
                 while (true) {
-                    if (g.Compare(Ta, Tb))break;//проверка на точность
+                    if (g.Compare(Ta, Tb, E))break;//проверка на точность
                     Ta = Tb;
                     Tb = g.Start(i);
                     AddPoints(Tb, i);
@@ -98,9 +98,19 @@ namespace TRP3.ViewModels
         /// </summary>
         public List<double> TN { get; set; } = new List<double>(4);
 
+        /// <summary>
+        /// Флаг моделирования
+        /// </summary>
         public bool Model { get; set; }
-
+        /// <summary>
+        /// График
+        /// </summary>
         public PlotModel PlotModel { get; private set; }
+
+        /// <summary>
+        /// Точность
+        /// </summary>
+        public double E { get; set; } = 0.01;
         public MainWindowViewModel()
         {
             #region Генерирование начальных значений в1
@@ -153,12 +163,19 @@ namespace TRP3.ViewModels
             PlotModel.Series.Add(new LineSeries());
             PlotModel.Series.Add(new LineSeries());
         }
-
-        private void PlotClearance() {//чистка графика
+        /// <summary>
+        /// чистка графика
+        /// </summary>
+        private void PlotClearance() {
             for (int i = 0; i < PlotModel.Series.Count; i++)
                 (PlotModel.Series[i] as LineSeries).Points.Clear();
         }
-        private void AddPoints(List<double> a, int n) {//добавление точек
+        /// <summary>
+        /// добавление точек
+        /// </summary>
+        /// <param name="a">набор точек</param>
+        /// <param name="n">значение по x</param>
+        private void AddPoints(List<double> a, int n) {
             for (int i = 0; i < a.Count; i++) {
                 (PlotModel.Series[i] as LineSeries).Points.Add(new DataPoint(n, a[i]));
                 
