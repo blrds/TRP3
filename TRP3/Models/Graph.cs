@@ -92,5 +92,17 @@ namespace TRP3.Models
 
             return answer;
         }
+
+        public List<double> Start(int n) {
+            N = n;
+            return Start();
+        }
+
+        public bool Compare(List<double> a, List<double> b) {//проверка точности
+            for (int i = 0; i < a.Count; i++) {
+                if (Math.Abs(a[i] - b[i]) > 0.01) return false;
+            }
+            return true;
+        }
     }
 }

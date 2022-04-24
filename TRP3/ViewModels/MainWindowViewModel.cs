@@ -1,4 +1,7 @@
-﻿using System;
+﻿using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +13,7 @@ using TRP3.ViewModels.Base;
 
 namespace TRP3.ViewModels
 {
-    class MainWindowViewModel:ViewModel
+    class MainWindowViewModel : ViewModel
     {
         #region StartCommand
 
@@ -20,10 +23,12 @@ namespace TRP3.ViewModels
         /// Проверка, можно ли выполнить вычисление(сумма вероятностей переходов из состояния=1, сумма вероятностей вхождений =1 и шагов >1
         /// </summary>
         /// <returns></returns>
-        private bool CanStartCommnadExecute(object p) {
+        private bool CanStartCommnadExecute(object p)
+        {
 
             double check = 0;
-            foreach (var a in Matrix) {
+            foreach (var a in Matrix)
+            {
                 check = 0;
                 foreach (var b in a)
                 {
@@ -33,7 +38,8 @@ namespace TRP3.ViewModels
                 if (check < 0.998 || check > 1.001) return false;
             }
             check = 0;
-            foreach (var a in T0) {
+            foreach (var a in T0)
+            {
                 if (a < 0) return false;
                 check += a;
             }
@@ -48,8 +54,25 @@ namespace TRP3.ViewModels
         private void OnStartCommandExecuted(object p)
         {
             Graph g = new Graph(Matrix, T0, N);
-            TN=g.Start();
+            if (!Model) {//моделируем, пока точность не равна 0.01
+                int i = 3;
+                PlotClearance();
+                List<double> Ta = g.Start(1), Tb=g.Start(2);
+                AddPoints(Ta, 1);
+                AddPoints(Tb, 2);
+                while (true) {
+                    if (g.Compare(Ta, Tb))break;//проверка на точность
+                    Ta = Tb;
+                    Tb = g.Start(i);
+                    AddPoints(Tb, i);
+                    i++;
+                }
+                TN = Tb;
+            }
+            else
+                TN = g.Start();
             OnPropertyChanged("TN");
+            
         }
 
         #endregion
@@ -74,7 +97,12 @@ namespace TRP3.ViewModels
         /// P(n)
         /// </summary>
         public List<double> TN { get; set; } = new List<double>(4);
-        public MainWindowViewModel() {
+
+        public bool Model { get; set; }
+
+        public PlotModel PlotModel { get; private set; }
+        public MainWindowViewModel()
+        {
             #region Генерирование начальных значений в1
             for (int i = 0; i < 4; i++)
             {
@@ -107,6 +135,36 @@ namespace TRP3.ViewModels
             #endregion
 
             StartCommand = new LambdaCommand(OnStartCommandExecuted, CanStartCommnadExecute);//инициализация команды 
+
+            PlotModel = new PlotModel();//график
+            #region Номер расчета
+            PlotModel.Axes.Add(new LinearAxis());
+            PlotModel.Axes.Last().Position = AxisPosition.Bottom;
+            PlotModel.Axes.Last().Minimum = 1;
+            #endregion
+            #region Вероятность
+            PlotModel.Axes.Add(new LinearAxis());
+            PlotModel.Axes.Last().Position = AxisPosition.Left;
+            PlotModel.Axes.Last().Minimum = 0;
+            #endregion
+
+            PlotModel.Series.Add(new LineSeries());
+            PlotModel.Series.Add(new LineSeries());
+            PlotModel.Series.Add(new LineSeries());
+            PlotModel.Series.Add(new LineSeries());
+        }
+
+        private void PlotClearance() {//чистка графика
+            for (int i = 0; i < PlotModel.Series.Count; i++)
+                (PlotModel.Series[i] as LineSeries).Points.Clear();
+        }
+        private void AddPoints(List<double> a, int n) {//добавление точек
+            for (int i = 0; i < a.Count; i++) {
+                (PlotModel.Series[i] as LineSeries).Points.Add(new DataPoint(n, a[i]));
+                
+            }
+            OnPropertyChanged("PlotModel");
+            PlotModel.InvalidatePlot(true);
         }
     }
 }
