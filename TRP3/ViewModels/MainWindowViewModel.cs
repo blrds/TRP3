@@ -1,4 +1,4 @@
-﻿using OxyPlot;
+using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
@@ -10,6 +10,7 @@ using System.Windows.Input;
 using TRP3.Infrastructure.Commands;
 using TRP3.Models;
 using TRP3.ViewModels.Base;
+using System.IO;
 
 namespace TRP3.ViewModels
 {
@@ -54,6 +55,7 @@ namespace TRP3.ViewModels
         private void OnStartCommandExecuted(object p)
         {
             Graph g = new Graph(Matrix, T0, N);
+            List<List<double>> stats = new List<List<double>>(); // лист листов
             if (Model)
             {//моделируем, пока точность не равна 0.01
                 int i = 3;
@@ -67,20 +69,33 @@ namespace TRP3.ViewModels
                     Ta = Tb;
                     Tb = g.Start(i);
                     AddPoints(Tb, i);
+                    stats.Add(Tb);
                     i++;
                 }
                 TN = Tb;
             }
             else
             {
+                PlotClearance();
                 List<double> a = null; ;
                 for (int i = 0; i < N; i++)
                 {
                     a = g.Start(i+1);
                     AddPoints(a, i+1);
+                    stats.Add(a);
                 }
                 TN = a;
+
             }
+            //печать в csv (tsv)
+            var csv = new StringBuilder();
+            foreach (var stat in stats)
+            {
+                var newLine = string.Format("{0}\t{1}\t{2}\t{3}", stat[0], stat[1], stat[2], stat[3]);
+                csv.AppendLine(newLine);
+            }
+            File.WriteAllText("stats.csv", csv.ToString());
+
             OnPropertyChanged("TN");
             
         }
