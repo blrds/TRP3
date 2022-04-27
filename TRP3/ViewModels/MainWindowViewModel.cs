@@ -76,7 +76,7 @@ namespace TRP3.ViewModels
                 List<double> a = null; ;
                 for (int i = 0; i < N; i++)
                 {
-                    a = g.Start();
+                    a = g.Start(i+1);
                     AddPoints(a, i+1);
                 }
                 TN = a;
