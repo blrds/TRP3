@@ -54,14 +54,16 @@ namespace TRP3.ViewModels
         private void OnStartCommandExecuted(object p)
         {
             Graph g = new Graph(Matrix, T0, N);
-            if (Model) {//моделируем, пока точность не равна 0.01
+            if (Model)
+            {//моделируем, пока точность не равна 0.01
                 int i = 3;
                 PlotClearance();
-                List<double> Ta = g.Start(1), Tb=g.Start(2);
+                List<double> Ta = g.Start(1), Tb = g.Start(2);
                 AddPoints(Ta, 1);
                 AddPoints(Tb, 2);
-                while (true) {
-                    if (g.Compare(Ta, Tb, E))break;//проверка на точность
+                while (true)
+                {
+                    if (g.Compare(Ta, Tb, E)) break;//проверка на точность
                     Ta = Tb;
                     Tb = g.Start(i);
                     AddPoints(Tb, i);
@@ -70,7 +72,15 @@ namespace TRP3.ViewModels
                 TN = Tb;
             }
             else
-                TN = g.Start();
+            {
+                List<double> a = null; ;
+                for (int i = 0; i < N; i++)
+                {
+                    a = g.Start();
+                    AddPoints(a, i+1);
+                }
+                TN = a;
+            }
             OnPropertyChanged("TN");
             
         }
