@@ -90,6 +90,7 @@ namespace TRP3.Models
                 if (T0[i] > 0)
                 {//если есть возможность входа с данной позиции, запускаем рекурсию
                     var b = Split(i, N);
+                    b = ProbabilityProduct(b, T0[i]);
                     answer = ProbabilitySum(answer, b);
                 }
             }

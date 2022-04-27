@@ -122,26 +122,26 @@ namespace TRP3.ViewModels
                 T0.Add(0);
             }
             N = 2;
-            Matrix[0][0] = 0.7;
-            Matrix[0][1] = 0.1;
+            Matrix[0][0] = 0.1;
+            Matrix[0][1] = 0.8;
             Matrix[0][2] = 0.1;
-            Matrix[0][3] = 0.1;
+            Matrix[0][3] = 0.0;
             Matrix[1][0] = 0.2;
             Matrix[1][1] = 0.6;
-            Matrix[1][2] = 0;
-            Matrix[1][3] = 0.2;
-            Matrix[2][0] = 0.2;
-            Matrix[2][1] = 0;
-            Matrix[2][2] = 0.5;
+            Matrix[1][2] = 0.1;
+            Matrix[1][3] = 0.1;
+            Matrix[2][0] = 0.1;
+            Matrix[2][1] = 0.6;
+            Matrix[2][2] = 0;
             Matrix[2][3] = 0.3;
             Matrix[3][0] = 0;
-            Matrix[3][1] = 0.3;
-            Matrix[3][2] = 0;
-            Matrix[3][3] = 0.7;
-            T0[0] = 0;
-            T0[1] = 0.8;
-            T0[2] = 0.2;
-            T0[3] = 0;
+            Matrix[3][1] = 0.7;
+            Matrix[3][2] = 0.1;
+            Matrix[3][3] = 0.2;
+            T0[0] = 0.2;
+            T0[1] = 0.6;
+            T0[2] = 0.1;
+            T0[3] = 0.1;
             #endregion
 
             StartCommand = new LambdaCommand(OnStartCommandExecuted, CanStartCommnadExecute);//инициализация команды 
