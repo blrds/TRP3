@@ -11,6 +11,8 @@ using TRP3.Infrastructure.Commands;
 using TRP3.Models;
 using TRP3.ViewModels.Base;
 using System.IO;
+using CsvHelper;
+using System.Globalization;
 
 namespace TRP3.ViewModels
 {
@@ -48,6 +50,7 @@ namespace TRP3.ViewModels
             return N > 1;
         }
 
+        List<List<double>> stats = new List<List<double>>();
 
         /// <summary>
         /// Кнопка пуск
@@ -55,7 +58,8 @@ namespace TRP3.ViewModels
         private void OnStartCommandExecuted(object p)
         {
             Graph g = new Graph(Matrix, T0, N);
-            List<List<double>> stats = new List<List<double>>(); // лист листов
+            stats.Clear();
+            // лист листов
             if (Model)
             {//моделируем, пока точность не равна 0.01
                 int i = 3;
@@ -69,7 +73,6 @@ namespace TRP3.ViewModels
                     Ta = Tb;
                     Tb = g.Start(i);
                     AddPoints(Tb, i);
-                    stats.Add(Tb);
                     i++;
                 }
                 TN = Tb;
@@ -80,24 +83,31 @@ namespace TRP3.ViewModels
                 List<double> a = null; ;
                 for (int i = 0; i < N; i++)
                 {
-                    a = g.Start(i+1);
-                    AddPoints(a, i+1);
-                    stats.Add(a);
+                    a = g.Start(i + 1);
+                    AddPoints(a, i + 1);
                 }
                 TN = a;
 
             }
-            //печать в csv (tsv)
-            var csv = new StringBuilder();
-            foreach (var stat in stats)
+            File.WriteAllText("file.csv", "");
+            using (var writer = new StreamWriter("file.csv"))
             {
-                var newLine = string.Format("{0}\t{1}\t{2}\t{3}", stat[0], stat[1], stat[2], stat[3]);
-                csv.AppendLine(newLine);
+                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+
+                    foreach (var a in stats)
+                    {
+                        foreach (var b in a)
+                        {
+                            csv.WriteRecord(b);
+                        }
+                        csv.NextRecord();
+                    }
+                }
             }
-            File.WriteAllText("stats.csv", csv.ToString());
 
             OnPropertyChanged("TN");
-            
+
         }
 
         #endregion
@@ -191,7 +201,8 @@ namespace TRP3.ViewModels
         /// <summary>
         /// чистка графика
         /// </summary>
-        private void PlotClearance() {
+        private void PlotClearance()
+        {
             for (int i = 0; i < PlotModel.Series.Count; i++)
                 (PlotModel.Series[i] as LineSeries).Points.Clear();
         }
@@ -200,10 +211,13 @@ namespace TRP3.ViewModels
         /// </summary>
         /// <param name="a">набор точек</param>
         /// <param name="n">значение по x</param>
-        private void AddPoints(List<double> a, int n) {
-            for (int i = 0; i < a.Count; i++) {
+        private void AddPoints(List<double> a, int n)
+        {
+            stats.Add(new List<double>(a));
+            for (int i = 0; i < a.Count; i++)
+            {
                 (PlotModel.Series[i] as LineSeries).Points.Add(new DataPoint(n, a[i]));
-                
+
             }
             OnPropertyChanged("PlotModel");
             PlotModel.InvalidatePlot(true);
